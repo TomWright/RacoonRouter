@@ -1,0 +1,25 @@
+{
+    "name": "racoon/router",
+    "description": "A basic extension of nikic/fast-route.",
+    "minimum-stability": "dev",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Tom Wright",
+            "email": "contact@tomwright.me"
+        },
+        {
+            "name": "John Saunders",
+            "email": "john@yettimedia.co.uk"
+        }
+    ],
+    "require": {
+        "nikic/fast-route": "^1.0",
+        "phpunit/phpunit": "^5.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Racoon\\Router\\": "src/"
+        }
+    }
+}
