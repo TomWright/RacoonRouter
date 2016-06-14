@@ -23,7 +23,7 @@ class RouteCollector extends \FastRoute\RouteCollector
      * @param $previousGroup
      * @return \stdClass
      */
-    public function createGroup($route, callable $callback, $previousGroup)
+    protected function createGroup($route, callable $callback, $previousGroup)
     {
         if (is_object($previousGroup)) {
             $route = "{$previousGroup->route}/" . ltrim($route, '/');
