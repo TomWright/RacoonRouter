@@ -40,6 +40,41 @@ $handlerString = '\\MyApp\\Users@list';
 $r->addRoute($httpRequestMethod, $requestUri, $handlerString);
 ```
 
+#### Route Groups
+To make it easier to set up long urls multiple times you can use groups. The following code blocks give the same result.
+
+```php
+$r->addRoute(['GET', 'POST'], '/users/list', '\\MyApp\\Users@list');
+$r->addRoute(['GET', 'POST'], '/users/get', '\\MyApp\\Users@get');
+$r->addRoute(['GET', 'POST'], '/users/update', '\\MyApp\\Users@update');
+$r->addRoute(['GET', 'POST'], '/users/delete', '\\MyApp\\Users@delete');
+```
+
+```php
+$r->addGroup('/users', function () {
+    $r->addRoute(['GET', 'POST'], '/list', '\\MyApp\\Users@list');
+    $r->addRoute(['GET', 'POST'], '/get', '\\MyApp\\Users@get');
+    $r->addRoute(['GET', 'POST'], '/update', '\\MyApp\\Users@update');
+    $r->addRoute(['GET', 'POST'], '/delete', '\\MyApp\\Users@delete');
+});
+```
+
+You can also use sub-groups. The following code blocks give the same result.
+
+```php
+$r->addRoute(['GET', 'POST'], '/some/long/url/do-something', '\\MyApp\\Users@list');
+```
+
+```php
+$r->addGroup('/some', function () {
+    $r->addGroup('/long', function () {
+        $r->addGroup('/url', function () {
+            $r->addRoute(['GET', 'POST'], '/do-something', '\\MyApp\\Users@list');
+        });
+    });
+});
+```
+
 #### HTTP Request Method
 The HTTP Request Method(s) that the route should match. This can be any HTTP request type such as `GET` or `POST`.
 
