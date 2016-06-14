@@ -11,24 +11,37 @@ Racoon uses [nikic/fast-route][nikic/fast-route] to deal with routing.
 
 ### Defining where routes are stored
 
-Routes need to be added in a routes file, which should be added to the `Router`.
+Routes need to be added in a routes file, which should be added to the `Router`, or defined in an anonymous function passed to the router.
 
 ```php
 $router->addRouteFile('/path/to/some_routes.php');
+
+// Tells the router you are done adding routes so as it can process them.
+$router->init();
 ```
 
 If you want to store routes in multiple locations you can do it as follows.
 
 ```php
-$router = $app->getRouter();
-
 $router
     ->addRouteFile('/path/to/some_routes.php')
     ->addRouteFile('/path/to/more_routes.php')
     ->addRouteFile('/path/to/even_more_routes.php');
+
+// Tells the router you are done adding routes so as it can process them.
+$router->init();
 ```
 
 If you define multiple route locations, they will be included/added in the same order as you define them.
+
+To define routes without storing them in a separate file you can do the following.
+
+```php
+$router->addRouteCallable(function($r) {
+    // Define your routes here as if they were in another file.
+    // $r->addRoute(), $r->addGroup(), etc are all available.
+});
+```
 
 ### Setting up routes
 Inside one of the route files that have been added to the router you need to define your routes in the following format.
@@ -66,9 +79,9 @@ $r->addRoute(['GET', 'POST'], '/some/long/url/do-something', '\\MyApp\\Users@lis
 ```
 
 ```php
-$r->addGroup('/some', function () {
-    $r->addGroup('/long', function () {
-        $r->addGroup('/url', function () {
+$r->addGroup('/some', function ($r) {
+    $r->addGroup('/long', function ($r) {
+        $r->addGroup('/url', function ($r) {
             $r->addRoute(['GET', 'POST'], '/do-something', '\\MyApp\\Users@list');
         });
     });

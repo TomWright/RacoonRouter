@@ -22,6 +22,11 @@ class Router
     protected $routeFiles = [];
 
     /**
+     * @var array|callable[]
+     */
+    protected $routeCallables = [];
+
+    /**
      * @var Dispatcher
      */
     protected $dispatcher;
@@ -64,6 +69,11 @@ class Router
                     throw new RouterException($this->request, 'Route file does not exist: ' . $routeFile);
                 }
             }
+            foreach ($this->routeCallables as $callable) {
+                if (is_callable($callable)) {
+                    $callable($r);
+                }
+            }
         }, ['routeCollector' => '\\Racoon\\Router\\RouteCollector']);
     }
 
@@ -95,6 +105,39 @@ class Router
     {
         if (! in_array($routeFile, $this->routeFiles)) {
             $this->routeFiles[] = $routeFile;
+        }
+        return $this;
+    }
+
+
+    /**
+     * @return \string[]
+     */
+    public function getRouteCallables()
+    {
+        return $this->routeCallables;
+    }
+
+
+    /**
+     * @param callable[] $callables
+     * @return $this
+     */
+    public function setRouteCallables($callables)
+    {
+        $this->routeCallables = $callables;
+        return $this;
+    }
+
+
+    /**
+     * @param callable $callable
+     * @return $this
+     */
+    public function addRouteCallable($callable)
+    {
+        if (! in_array($callable, $this->routeCallables)) {
+            $this->routeCallables[] = $callable;
         }
         return $this;
     }
